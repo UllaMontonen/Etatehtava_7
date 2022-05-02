@@ -89,10 +89,10 @@ public class Dao {
 		}		
 		return asiakkaat;
 	}
-	
+	// Lis‰t‰‰n asiakas tietokantaan
 	public boolean lisaaAsiakas(Asiakas asiakas){
 		boolean paluuArvo=true;
-		sql="INSERT INTO asiakkaat VALUES(?,?,?,?)";						  
+		sql="INSERT INTO asiakkaat(etunimi, sukunimi, puhelin, sposti) VALUES(?,?,?,?)";						  
 		try {
 			con = yhdista();
 			stmtPrep=con.prepareStatement(sql); 
@@ -101,6 +101,7 @@ public class Dao {
 			stmtPrep.setString(3, asiakas.getPuhelin());
 			stmtPrep.setString(4, asiakas.getSposti());
 			stmtPrep.executeUpdate();
+			// jos haluaa tiet‰‰ mik‰ on uusin id System.out.println("Uusin id on " + stmtPrep.getGeneratedKeys().getInt(1));
 	        con.close();
 		} catch (Exception e) {				
 			e.printStackTrace();
@@ -108,13 +109,14 @@ public class Dao {
 		}				
 		return paluuArvo;
 	}
-	public boolean poistaAsiakas(String asiakas_id){ //Oikeassa el‰m‰ss‰ tiedot ensisijaisesti merkit‰‰n poistetuksi.
+	// Poistetaan asiakas tietokannasta
+	public boolean poistaAsiakas(int asiakas_id){ //Oikeassa el‰m‰ss‰ tiedot ensisijaisesti merkit‰‰n poistetuksi.
 		boolean paluuArvo=true;
 		sql="DELETE FROM asiakkaat WHERE asiakas_id=?";						  
 		try {
 			con = yhdista();
 			stmtPrep=con.prepareStatement(sql); 
-			stmtPrep.setString(1, asiakas_id);			
+			stmtPrep.setInt(1, asiakas_id);			
 			stmtPrep.executeUpdate();
 	        con.close();
 		} catch (Exception e) {				

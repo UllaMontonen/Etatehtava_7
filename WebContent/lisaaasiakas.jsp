@@ -86,6 +86,8 @@ $(document).ready(function(){
 			lisaaTiedot();
 		}		
 	}); 	
+	//vied‰‰n kursori etunimi kohtaan sivun latauksen yhteydess‰
+	$("#etunimi").focus(); 
 });
 //funktio tietojen lis‰‰mist‰ varten. Kutsutaan backin POST-metodia ja v‰litet‰‰n kutsun mukana uudet tiedot json-stringin‰.
 //POST /asiakkaat/

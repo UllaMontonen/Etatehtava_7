@@ -20,7 +20,7 @@ public class Asiakkaat extends HttpServlet {
         super();
         System.out.println("Asiakkaat.Asiakkaat()");
     }
-	
+	// Asiakkaiden hakeminen
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Asiakkaat.doGet()");
 		String pathInfo = request.getPathInfo();	//haetaan kutsun polkutiedot, esim. /aalto			
@@ -37,7 +37,7 @@ public class Asiakkaat extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		out.println(strJSON);		
 	}
-	
+	// Asiakkaan lis‰‰minen
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Asiakkaat.doPost()");
 		JSONObject jsonObj = new JsonStrToObj().convert(request); //Muutetaan kutsun mukana tuleva json-string json-objektiksi			
@@ -55,20 +55,19 @@ public class Asiakkaat extends HttpServlet {
 			out.println("{\"response\":0}");  //Asiakkaan lis‰‰minen ep‰onnistui {"response":0}
 		}		
 	}
-	
+	// Asiakkaan muuttaminen
 	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Asiakkaat.doPut()");		
 	}
-	
+	// Asiakkaan poistaminen
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Asiakkaat.doDelete()");	
 		String pathInfo = request.getPathInfo();	//haetaan kutsun polkutiedot		
-		System.out.println("polku: "+pathInfo);
-		String poistettavaAsiakas_id = pathInfo.replace("/", "");		
+		int asiakas_id = Integer.parseInt(pathInfo.replace("/", ""));	//poistetaan polusta "/", j‰ljelle j‰‰ id, joka muutetaan int	
+		Dao dao = new Dao();
 		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
-		Dao dao = new Dao();			
-		if(dao.poistaAsiakas(poistettavaAsiakas_id)){ //metodi palauttaa true/false
+		if(dao.poistaAsiakas(asiakas_id)){ //metodi palauttaa true/false
 			out.println("{\"response\":1}");  //Asiakkaan poistaminen onnistui {"response":1}
 		}else{
 			out.println("{\"response\":0}");  //Asiakkaan poistaminen ep‰onnistui {"response":0}
