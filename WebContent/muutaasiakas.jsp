@@ -22,10 +22,9 @@
 				<th>Sukunimi</th>
 				<th>Puhelin</th>
 				<th>Sposti</th>	
-				<th></th>
+				<th>Hallinta</th>
 			</tr>
 		</thead>
-		<tbody>
 			<tr>
 				<td><input type="text" name="etunimi" id="etunimi"></td>
 				<td><input type="text" name="sukunimi" id="sukunimi"></td>
@@ -33,8 +32,10 @@
 				<td><input type="text" name="sposti" id="sposti"></td> 
 				<td><input type="submit" id="tallenna" value="Muuta"></td>
 			</tr>
+			<tbody>
 		</tbody>
 	</table>
+	<input type="hidden" name="asiakas_id" id="asiakas_id">
 </form>
 <span id="ilmo"></span>
 </body>
@@ -47,22 +48,22 @@ $(document).ready(function(){
 	//GET /asiakkaat/haeyksi/asiakas_id
 	var asiakas_id = requestURLParam("asiakas_id"); //Funktio lˆytyy scripts/main.js 	
 	$.ajax({url:"asiakkaat/haeyksi/"+asiakas_id, type:"GET", dataType:"json", success:function(result){	
-		$("#asiakas_id").val(result.asiakas_id);		
 		$("#etunimi").val(result.etunimi);	
 		$("#sukunimi").val(result.sukunimi);
 		$("#puhelin").val(result.puhelin);
-		$("#sposti").val(result.sposti);			
+		$("#sposti").val(result.sposti);
+		$("#asiakas_id").val(result.asiakas_id);
     }});
 	
 	$("#tiedot").validate({						
 		rules: {
 			etunimi:  {
 				required: true,
-				minlength: 1				
+				minlength: 2				
 			},	
 			sukunimi:  {
 				required: true,
-				minlength: 1				
+				minlength: 2				
 			},
 			puhelin:  {
 				required: true,
@@ -94,7 +95,7 @@ $(document).ready(function(){
 			}
 		},			
 		submitHandler: function(form) {	
-			paivitaTiedot();
+			vieTiedot();
 		}		
 	}); 	
 	//vied‰‰n kursori etunimi kohtaan sivun latauksen yhteydess‰
@@ -102,14 +103,13 @@ $(document).ready(function(){
 });
 //funktio tietojen lis‰‰mist‰ varten. Kutsutaan backin POST-metodia ja v‰litet‰‰n kutsun mukana uudet tiedot json-stringin‰.
 //POST /asiakkaat/
-function paivitaTiedot(){	
+function vieTiedot(){	
 	var formJsonStr = formDataJsonStr($("#tiedot").serializeArray()); //muutetaan lomakkeen tiedot json-stringiksi
-	$.ajax({url:"asiakkaat", data:formJsonStr, type:"PUT", dataType:"json", success:function(result) { //result on joko {"response:1"} tai {"response:0"}       
+	$.ajax({url:"asiakkaat", data:formJsonStr, type:"PUT", success:function(result) { //result on joko {"response:1"} tai {"response:0"}       
 		if(result.response==0){
       	$("#ilmo").html("Asiakkaan p‰ivitt‰minen ep‰onnistui.");
       }else if(result.response==1){			
       	$("#ilmo").html("Asiakkaan p‰ivitt‰minen onnistui.");
-      	$("#etunimi", "#sukunimi", "#puhelin", "#sposti").val("");
 		}
   }});	
 }
